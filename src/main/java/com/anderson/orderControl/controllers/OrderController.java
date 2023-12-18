@@ -17,6 +17,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @GetMapping
     public ResponseEntity<List<Order>> findAll() {
         List<Order> orders = orderService.findAll();
         return ResponseEntity.ok().body(orders);
