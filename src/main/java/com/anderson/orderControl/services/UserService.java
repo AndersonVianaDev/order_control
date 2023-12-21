@@ -4,6 +4,7 @@ import com.anderson.orderControl.entities.User;
 import com.anderson.orderControl.repositories.UserRepository;
 import com.anderson.orderControl.services.exceptions.DatabaseException;
 import com.anderson.orderControl.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -42,9 +43,13 @@ public class UserService {
     }
 
     public User update(Long id, User obj) {
-        User entity = userRepository.getReferenceById(id);
-        updateDate(entity, obj);
-        return entity;
+        try {
+            User entity = userRepository.getReferenceById(id);
+            updateDate(entity, obj);
+            return entity;
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private User updateDate(User entity, User obj) {
